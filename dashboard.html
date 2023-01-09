@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- required meta tags -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-control" content="no-cache">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- for bootstrap slider -->
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" media="screen">
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <!-- Google Font  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">
+
+  <!-- custom styling -->
+  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
+  <!-- Title of our website -->
+  <title>Our Project</title>
+
+</head>
+
+<body>
+
+  <!-- navbar  -->
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #346ee0;">
+    <div class="container">
+      <img
+        src="https://www.freepnglogos.com/uploads/google-play-png-logo/google-play-store-app-logo-gets-a-slight-redesign-png-19.png"
+        width="40" height="40" alt="">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" style="font-size: 30px; color: white; font-family: roboto;">Google Play Store
+              Analysis</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- container class to reduce width -->
+  <div class="container mt-4">
+
+    <div class="features" style="height: 100%; padding: 0px 0px 20px 0px;">
+
+      <!-- Form for features -->
+      <div data-role="main" class="ui-content">
+        <!-- Redirecting to same dashboard page afer submit -->
+        <form method="POST" action="{{url_for('dashboard')}}">
+          <div class="row">
+            <div class="col-6">
+              <h3 style="font-weight: 600;">Category's Yearly Performance</h3>
+            </div>
+            <div class="col-6">
+              <h3 style="font-weight: 600;">Application Details</h3>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-6">
+
+              <!-- Category's yearly performance form -->
+              <!-- Years slider -->
+
+              <div data-role="rangeslider">
+                <input type="range" name="starting year" value="none" min="2010" max="2020">
+                <label style="font-size: 20px;" for="price-max">Choose starting and ending year</label>
+                <input type="range" name="ending year" value="none" min="2011" max="2021">
+              </div>
+
+              <!-- Choosing category dropdown -->
+
+              <select class="top-margin" name="choose category">
+                <option value="none">Select category</option>
+                {%for i in select_options %}
+                <option value="{{i}}">{{i}}</option>
+                {%endfor%}
+              </select>
+
+              <!-- submit button for feature 1 -->
+              <input type="submit" class="btn btn-md btn-dark "
+                style="border-radius: 5px; background-color: #088f8f; border:none;" data-inline="true" value="Submit">
+            </div>
+
+            <div class="col-6">
+              <!-- Search app feature 2 -->
+              <label style="font-size: 20px;" for="price-max">Search your app</label>
+              <input placeholder="eg. Facebook" type="text" value="" name="searchedapp">
+              <input class="btn btn-md btn-dark " style="border-radius: 5px; background-color: #088f8f; border:none;"
+                type="submit" data-inline="true" value="Submit">
+
+              <!-- Search app feature output -->
+              <!-- When form is submitted, output_this variable will be created with value 'true' -->
+              {% if output_this == 'true' %}
+              {% if output_app %}
+              <h5 style="padding-top: 40px; padding-bottom: 0px; font-weight: bold;">App Name: {{ output_app[0] }}</h5>
+              <h5 style="font-weight: bold;">App Size: {{ output_app[1] }}</h5>
+              <h5 style="font-weight: bold;">Rating: {{ output_app[2] }}</h5>
+              <h5 style="font-weight: bold;">Category: {{ output_app[3] }}</h5>
+              <h5 style="font-weight: bold;">Released: {{ output_app[4] }}</h5>
+              <h5 style="font-size: 0;" id="app-os-version">{{ output_app[5] }}</h5>
+              <br>
+              <h3>Check OS Compatibility</h3>
+              <input class="btn btn-lg" id="user-os-version" type="text">
+              <button type="button" onclick="checkOScompatibility();">Submit</button>
+
+              <div id="output-value" style="margin-top: 20px;" role="alert">
+              </div>
+              <!-- else is for category's yearly performance feature output -->
+              {% endif %}
+              {% endif %}
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+      {% if show_feature1_image == 'true' %}
+      <div style="padding-left: 20px; padding-bottom: 10px;">
+
+        <img src="{{url_for('static', filename='feature' + random_number + '.png')}}" width="70%" alt="image-not-shown">
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Dashboard text information -->
+
+    <div class="row" style="margin-top: 50px;">
+      <!-- free apps percentage -->
+      <div class="col my-box" style="font-weight: 600;">
+        <p>Free Apps</p>
+        <h3>{{output_data[0]}}%</h3>
+      </div>
+      <!-- paid apps percentage -->
+      <div class="col my-box" style="font-weight: 600;">
+        <p>Paid Apps</p>
+        <h3>{{output_data[1]}}%</h3>
+      </div>
+      <!-- Ad-supported percentage -->
+      <div class="col my-box">
+        <p style="background-color: #346ee0; color: white;">Ad-supported</p>
+        <h3>{{output_data[2]}}%</h3>
+      </div>
+      <!-- Non ad-supported percentage -->
+      <div class="col my-box">
+        <p style="background-color: #346ee0; color: white;">Non Ad-supported</p>
+        <h3>{{output_data[3]}}%</h3>
+      </div>
+    </div>
+
+    <!-- Popular categories graph based on average rating section -->
+    <div class="row" style="margin-top: 50px;">
+      <!-- graph of top 10 most popular categories -->
+      <div class="col-8" style="padding-left: 0px;">
+        <img class="images" src="{{url_for('static', filename='most_popular_categories.png')}}" width="100%"
+          alt="image-not-shown">
+      </div>
+
+      <!-- categories based on average rating text information -->
+      <div class="col main" style="padding-left: 0px;">
+        <h5>Categories Based on average rating</h5>
+        <div class="categories-top-bottom">
+          <h3>Top 5</h3>
+          <p>{{top5_rating_based_apps[0][0]}}: <span>{{top5_rating_based_apps[0][1]}}</span> </p>
+          <p>{{top5_rating_based_apps[1][0]}}: <span>{{top5_rating_based_apps[1][1]}}</span> </p>
+          <p>{{top5_rating_based_apps[2][0]}}: <span>{{top5_rating_based_apps[2][1]}}</span> </p>
+          <p>{{top5_rating_based_apps[3][0]}}: <span>{{top5_rating_based_apps[3][1]}}</span> </p>
+          <p>{{top5_rating_based_apps[4][0]}}: <span>{{top5_rating_based_apps[4][1]}}</span> </p>
+        </div>
+        <hr>
+        <div class="categories-top-bottom">
+          <h3>Bottom 5</h3>
+          <p>{{bottom5_rating_based_apps[0][0]}}: <span>{{bottom5_rating_based_apps[0][1]}}</span> </p>
+          <p>{{bottom5_rating_based_apps[1][0]}}: <span>{{bottom5_rating_based_apps[1][1]}}</span> </p>
+          <p>{{bottom5_rating_based_apps[2][0]}}: <span>{{bottom5_rating_based_apps[2][1]}}</span> </p>
+          <p>{{bottom5_rating_based_apps[3][0]}}: <span>{{bottom5_rating_based_apps[3][1]}}</span> </p>
+          <p>{{bottom5_rating_based_apps[4][0]}}: <span>{{bottom5_rating_based_apps[4][1]}}</span> </p>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 50px;">
+      <div class="col-5 my-auto" style="padding-left: 0px;">
+        <img class="images" src="{{url_for('static', filename='secured_and_non_secured_apps.png')}}" width="100%"
+          alt="image-not-shown">
+      </div>
+      <div class="col" style="padding-right: 0px;">
+        <img class="images" src="{{url_for('static', filename='user_count_per_year.png')}}" width="100%"
+          alt="image-not-shown">
+
+      </div>
+    </div>
+    <div class="row" style="margin-top: 50px;">
+      <div class="col main">
+
+        <!-- Recent most download apps -->
+        <h5>Recent most downloaded Apps</h5>
+        <div class="categories-top-bottom">
+          {% for i in range(0, 10) %}
+          <p style="padding-top: 15px;">{{top_most_downloads_recent_names[i]}}:
+            <span>{{top_most_downloads_recent[i][1]}}</span></p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-8" style="padding-right: 0px;">
+        <img class="images" src="{{url_for('static', filename='most_downloaded_apps.png')}}" width="100%"
+          alt="image-not-shown">
+      </div>
+    </div>
+
+    <!-- average rating graph -->
+    <div class="row" style="margin-top: 50px;">
+      <div class="col-9" style="padding-left: 0px;">
+        <img class="images" src="{{url_for('static', filename='average_rating_per_year.png')}}" width="100%"
+          alt="image-not-shown">
+      </div>
+      <!-- Quality of apps in percentage -->
+      <div class="col my-auto">
+        <div class="row">
+          <div class="col-12 my-box">
+            <p style="font-weight: 600;">Poor Quality Apps</p>
+            <h3>{{quality_rating[0][1]}}%</h3>
+          </div>
+          <div class="col-12 my-box" style="margin-top: 30px; ">
+            <p style="font-weight: 600;">Average Quality Apps</p>
+            <h3>{{quality_rating[1][1]}}%</h3>
+          </div>
+
+          <div class="col-12 my-box" style="margin-top: 30px;">
+            <p style="font-weight: 600;">Good Quality Apps</p>
+            <h3>{{quality_rating[2][1]}}%</h3>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cheapest and expensive app  -->
+    <div class="row" style="margin-top: 50px;">
+      <div class="col-9" style=" padding-left: 0px;">
+        <img class="images" src="{{url_for('static', filename='app_count_per_year.png')}}" width="100%"
+          alt="image-not-shown">
+      </div>
+      <div class="col my-auto">
+        <div class="row">
+          <div class="col-12 my-box" style="height: 100%; ">
+            <p style="font-weight: 600;">Cheapest Apps</p>
+            <h5 style="padding-left: 10px;">{{output_data[4][0][0]}}</h5>
+            <h3>{{output_data[4][0][1]}} USD</h3>
+            <hr>
+            <h5 style="padding-left: 10px;">{{output_data[4][1][0]}}</h5>
+            <h3>{{output_data[4][1][1]}} USD</h3>
+          </div>
+          <div class="col-12 my-box" style="margin-top: 40px; height: 100%">
+            <p style="font-weight: 600;">Most Expensive App</p>
+            <h5 style="padding-left: 10px;">{{output_data[5][0]}}</h5>
+            <h3>{{output_data[5][1]}} USD</h3>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr style="margin-top: 70px;">
+  <p class="text-center">© Copyright 2021 [Asad Rizvi, Fareed Khan]</p>
+
+  <!-- Javascript to check OS Compatibility feature -->
+  <script>
+    function checkOScompatibility() {
+
+      // Getting value of app OS version and user typed OS Version
+      app_version = document.getElementById("app-os-version").innerHTML;
+      user_version = document.getElementById("user-os-version").value;
+
+      // Converting both values in float
+      numeric_user_version = parseFloat(user_version)
+      numeric_app_version = parseFloat(app_version)
+
+      // getting tag where to show result
+      output = document.getElementById("output-value")
+
+      // checking if App OS Version Varies with devices
+      if (app_version == 'Var') {
+        generated_text =
+          "<h5 style='padding-top: 10px; font-weight: 600;'>The Android Version of this app varies with devices!</h5>";
+        output.className = "alert alert-primary";
+        output.innerHTML = generated_text
+      }
+      // checking if user OS Version is greater than App OS Version
+      else if (numeric_user_version >= numeric_app_version) {
+        generated_text =
+          "<h5 style='padding-top: 10px; font-weight: 600;'>This App is compatible with your device.</h5>";
+        output.className = "alert alert-success";
+        output.innerHTML = generated_text
+      }
+      // checking if user OS Version is lesser than App OS Version
+      else {
+        generated_text =
+          "<h5 style='padding-top: 10px; font-weight: 600;'>This App is not compatible with your device.</h5>";
+        output.className = "alert alert-danger";
+        output.innerHTML = generated_text
+      }
+
+    }
+  </script>
+
+  <!-- Bootstrap js for slider -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
